@@ -1,18 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using SerenApp.Core.Interfaces;
 using SerenApp.Core.Model;
+using SerenApp.Infrastructure.DAL.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SerenApp.Infrastructure.DAL.Cosmos
+namespace SerenApp.Infrastructure.DAL
 {
     public class DeviceDataRepository : IDeviceDataRepository
     {
-        private readonly CosmosContext context;
-        public DeviceDataRepository(CosmosContext context) {
+        private readonly AContextBase context;
+        public DeviceDataRepository(AContextBase context)
+        {
             this.context = context;
         }
 

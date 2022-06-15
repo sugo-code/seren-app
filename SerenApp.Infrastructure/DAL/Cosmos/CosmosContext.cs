@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SerenApp.Core.Model;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,20 @@ using System.Threading.Tasks;
 
 namespace SerenApp.Infrastructure.DAL.Cosmos
 {
-    public class CosmosContext : DbContext
+    public class CosmosContext : AContextBase
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Device> Devices { get; set; }
-        public DbSet<DeviceData> DeviceData { get; set; }
+        private readonly string connectionString;
+        private readonly string databaseName;
+
+        public CosmosContext(IConfiguration config)
+        {
+            this.connectionString = config.GetConnectionString(Config.CosmosConnectionStringKey);
+            this.databaseName = config[Config.DatabaseNameKey];
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+        {
+            optionsBuilder.UseCosmos(connectionString, databaseName);
+        }
     }
 }
