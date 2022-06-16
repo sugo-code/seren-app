@@ -1,0 +1,21 @@
+{
+  "version": "2.0",
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myIoTHubMessage",
+      "direction": "in",
+      "eventHubName": "sugocode-hub",
+      "connection": "zanetti-iothub_events_IOTHUB",
+      "consumerGroup": "$Default"
+    }
+  ],
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  }
+}
