@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SerenApp.Core.Interfaces;
 using SerenApp.Core.Model;
-using SerenApp.Infrastructure.DAL.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +11,8 @@ namespace SerenApp.Infrastructure.DAL
 {
     public class DeviceRepository : IDeviceRepository
     {
-        private readonly AContextBase context;
-        public DeviceRepository(AContextBase context)
+        private readonly AppDbContext context;
+        public DeviceRepository(AppDbContext context)
         {
             this.context = context;
         }
@@ -32,7 +31,7 @@ namespace SerenApp.Infrastructure.DAL
 
         public async Task<Device> GetById(Guid id)
         {
-            return await context.Devices.FirstAsync(d => d.Id == id);
+            return await context.Devices.FirstAsync(d => d.ID == id);
         }
 
         public async Task<Device> Insert(Device item)

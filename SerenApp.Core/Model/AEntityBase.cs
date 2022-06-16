@@ -8,6 +8,6 @@ namespace SerenApp.Core.Model
 {
     public abstract class AEntityBase<T>
     {
-        public T Id { get; set; }
+        public T ID { get; set; }
     }
 }
