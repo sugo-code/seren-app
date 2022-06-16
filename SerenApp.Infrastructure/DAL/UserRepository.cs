@@ -34,6 +34,11 @@ namespace SerenApp.Infrastructure.DAL
             return await context.Users.FirstAsync(d => d.ID == id);
         }
 
+        public async Task<User> GetByPhoneNumber(string phoneNumber)
+        {
+            return await context.Users.FirstAsync(d => d.PhoneNumber == phoneNumber);
+        }
+
         public async Task<User> Insert(User item)
         {
             await context.AddAsync(item);
