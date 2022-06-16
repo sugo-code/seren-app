@@ -1,7 +1,22 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using SerenApp.Core.Interfaces;
+using SerenApp.Infrastructure.DAL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var dbName = builder.Configuration.GetValue<string>("DatabaseName");
+
+    if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase(dbName);
+    else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
+});
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
