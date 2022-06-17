@@ -1,0 +1,102 @@
+@page "/Login"
+
+@using SerenApp.Core.Interfaces
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Cryptography.KeyDerivation
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authentication
+
+@inject IHttpContextAccessor ContextAccessor
+@inject IUserRepository Users
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="phone-number" @bind-Value="loginModel.PhoneNumber" />
+    <InputText type="password" id="password" @bind-Value="loginModel.Password" />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private class LoginModel
+    {
+        [Required(ErrorMessage = "You must provide a phone number")]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "You must provide a password")]
+        [DataType(DataType.Password)]
+        [MinLength(8)]
+        [MaxLength(32)]
+        public string Password { get; set; }
+    }
+
+    private LoginModel loginModel = new();
+
+    private async void HandleValidSubmit()
+    {
+        var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+        string parsed = "";
+
+        try
+        {
+            var number = phoneNumberUtil.Parse(loginModel.PhoneNumber, null);
+            parsed = phoneNumberUtil.Format(number, PhoneNumbers.PhoneNumberFormat.E164);
+        }
+        catch (PhoneNumbers.NumberParseException e)
+        {
+            ErrorMessage = e.Message;
+            return;
+        }
+
+        var user = await Users.GetByPhoneNumber(parsed);
+        if (user != null)
+        {
+            ErrorMessage = "Wrong user or password";
+            return;
+        }
+
+        byte[] hashed = KeyDerivation.Pbkdf2(
+            password: loginModel.Password,
+            salt: user.ID.ToByteArray(),
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 100000,
+            numBytesRequested: 256 / 8);
+
+        if(hashed == user.PasswordHash)
+        {
+            ErrorMessage = "Wrong user or password";
+            return;
+        }
+
+        var claims = new List<Claim>();
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()));
+        claims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
+        claims.Add(new Claim(ClaimTypes.Role, "USER"));
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var authProperties = new AuthenticationProperties{ };
+
+        await ContextAccessor.HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        if(ContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
