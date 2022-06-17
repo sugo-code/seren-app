@@ -1,3 +1,6 @@
+@inject Logic.TokenProvider TokenProvider
+@inject IJSRuntime JSRuntime
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">SerenApp.Web</a>
@@ -15,20 +18,23 @@
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true"></span> Home
                     </NavLink>
-                    <NavLink class="nav-link" href="logout" Match="NavLinkMatch.All">
-                        <span class="oi oi-home" aria-hidden="true"></span> Logout
-                    </NavLink>
+                    <form @ref="LogoutForm" method="post" action="/identiy/account/logout" hidden>
+                        <input name="__RequestVerificationToken" type="hidden" value="@TokenProvider.AntiForgeryToken" />
+                    </form>
+                    <a class="nav-link" href="" @onclick="Logout">
+                        <span class="oi oi-home" aria-hidden="true"></span> Log out
+                    </a>
                 </Authorized>
                 <NotAuthorized>
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true"></span> Home
                     </NavLink>
-                    <NavLink class="nav-link" href="login" Match="NavLinkMatch.All">
+                    <a class="nav-link" href="Identity/Account/Login">
                         <span class="oi oi-home" aria-hidden="true"></span> Login
-                    </NavLink>
-                    <NavLink class="nav-link" href="register" Match="NavLinkMatch.All">
+                    </a>
+                    <a class="nav-link" href="Identity/Account/Register">
                         <span class="oi oi-home" aria-hidden="true"></span> Register
-                    </NavLink>
+                    </a>
                 </NotAuthorized>
             </AuthorizeView>
             
@@ -41,8 +47,21 @@
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+    private ElementReference LogoutForm;
+    private IJSObjectReference module;
+
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        await module.InvokeVoidAsync("SubmitForm", LogoutForm);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        module = await JSRuntime.InvokeAsync<IJSObjectReference>("import","./Shared/NavMenu.razor.js");
     }
 }

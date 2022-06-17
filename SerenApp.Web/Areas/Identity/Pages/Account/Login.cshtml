@@ -1,0 +1,17 @@
+@page "/identity/account/login"
+@model LoginModel
+
+<h3>Login</h3>
+
+<form method="POST">
+
+    <label for="phone-number">PhoneNumber</label>
+    <input asp-for="Model.PhoneNumber" type="text" id="phone-number" />
+
+    <label for="password">Password</label>
+    <input asp-for="Model.Password" type="password" id="password" />
+
+    <button type="submit">Submit</button>
+</form>
+
+<p>@Model.ErrorMessage</p>

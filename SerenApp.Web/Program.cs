@@ -4,6 +4,7 @@ using SerenApp.Core.Interfaces;
 using SerenApp.Infrastructure.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SerenApp.Web.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
 });
+builder.Services.AddScoped<TokenProvider>();
 
 var app = builder.Build();
 

@@ -9,6 +9,6 @@ namespace SerenApp.Core.Model
     public class Admin : AEntityBase<Guid>
     {
         public string Username { get; set; }
-        public byte[] PasswordHash { get; set; }
+        public string PasswordHash { get; set; }
     }
 }
