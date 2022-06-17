@@ -1,5 +1,7 @@
 # SerenApp
 
+## [Team](https://docs.google.com/document/d/1PIiooq4olXAzw3z6jHwnzAVe7gnTTyST/edit?usp=sharing&ouid=116430372495381648588&rtpof=true&sd=true)
+
 | Name                  | Mail                                              | Role                      | Github account                                        |
 | --------------------- |:-------------------------------------------------:| -------------------------:|  ----------------------------------------------------:|
 | Bovolato Nicola       | nicola.bovolato@stud.tecnicosuperiorekennedy.it   | Solution architect        | [nicola-bovolato](https://github.com/nicola-bovolato) |
