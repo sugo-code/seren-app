@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
 });
 
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
@@ -30,7 +31,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
 });
+
 builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<AccountLogic>();
 
 var app = builder.Build();
 

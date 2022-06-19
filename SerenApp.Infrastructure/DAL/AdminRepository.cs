@@ -34,6 +34,11 @@ namespace SerenApp.Infrastructure.DAL
             return await context.Admins.FirstAsync(d => d.ID == id);
         }
 
+        public async Task<Admin> GetByUsername(string username)
+        {
+            return await context.Admins.FirstAsync(d => d.Username == username);
+        }
+
         public async Task<Admin> Insert(Admin item)
         {
             await context.AddAsync(item);

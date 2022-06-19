@@ -8,5 +8,7 @@ using System.Threading.Tasks;
 namespace SerenApp.Core.Interfaces
 {
     public interface IAdminRepository : IRepository<Admin, Guid>
-    {}
+    {
+        public Task<Admin> GetByUsername(string username);
+    }
 }

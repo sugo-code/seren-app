@@ -6,3 +6,13 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<AuthorizeView Roles="@Logic.AccountLogic.UserRole">
+    You are logged in as User
+</AuthorizeView>
+<AuthorizeView Roles="@Logic.AccountLogic.AdminRole">
+    You are logged in as Admin
+</AuthorizeView>
+<AuthorizeView>
+    <NotAuthorized>You are not logged in</NotAuthorized>
+</AuthorizeView>
