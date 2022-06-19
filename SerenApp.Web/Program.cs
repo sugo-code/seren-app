@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using SerenApp.Core.Interfaces;
 using SerenApp.Infrastructure.DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using SerenApp.Web.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
 });
 
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
@@ -21,6 +24,16 @@ builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+});
+
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<AccountLogic>();
 
 var app = builder.Build();
 
@@ -37,6 +50,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

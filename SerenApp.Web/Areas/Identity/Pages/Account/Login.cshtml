@@ -1,0 +1,45 @@
+@page "/identity/account/login"
+@model LoginModel
+
+<h3>Login</h3>
+
+<button id="admin-button" onclick="toggleLogin()" hidden="@Model.LastLoginWasAdmin">Admin Login</button>
+<button id="user-button"  onclick="toggleLogin()" hidden="@(!Model.LastLoginWasAdmin)">User Login</button>
+
+<form id="user-form" method="POST" asp-page-handler="LoginUser" hidden="@Model.LastLoginWasAdmin">
+
+    <label for="user-phone-number">PhoneNumber</label>
+    <input asp-for="UserModel.PhoneNumber" type="text" id="user-phone-number" />
+
+    <label for="user-password">Password</label>
+    <input asp-for="UserModel.Password" type="password" id="user-password" />
+
+    <button type="submit">Submit</button>
+</form>
+
+<form id="admin-form" method="POST" asp-page-handler="LoginAdmin" hidden="@(!Model.LastLoginWasAdmin)">
+
+    <label for="admin-username">Username</label>
+    <input asp-for="AdminModel.Username" type="text" id="admin-username" />
+
+    <label for="admin-password">Password</label>
+    <input asp-for="AdminModel.Password" type="password" id="admin-password" />
+
+    <button type="submit">Submit</button>
+</form>
+
+<p>@Model.ErrorMessage</p>
+
+<script>
+    function toggleLogin() {
+        const adminButton = document.getElementById("admin-button")
+        const userButton = document.getElementById("user-button")
+        const adminForm = document.getElementById("admin-form")
+        const userForm = document.getElementById("user-form")
+
+        adminButton.hidden = !adminButton.hidden
+        userButton.hidden = !userButton.hidden
+        adminForm.hidden = !adminForm.hidden
+        userForm.hidden = !userForm.hidden
+    }
+</script>
