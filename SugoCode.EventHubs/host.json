@@ -1,0 +1,32 @@
+{
+  "version": "2.0",
+  //"bindings": [
+  //  {
+  //    "type": "eventHubTrigger",
+  //    "name": "events",
+  //    "direction": "in",
+  //    "eventHubName": "sugocode-hub",
+  //    "cardinality": "many",
+  //    "connection": "sugocode-hub-ns_acctest_EVENTHUB",
+  //    "consumerGroup": "$Default"
+  //  }
+  //],
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myIoTHubMessage",
+      "direction": "in",
+      "eventHubName": "sugocode-hub",
+      "connection": "sugocode-hub-ns_acctest_EVENTHUB",
+      "consumerGroup": "$Default"
+    }
+  ],
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  }
+}

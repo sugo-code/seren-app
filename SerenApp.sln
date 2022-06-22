@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerenApp.Core", "SerenApp.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerenApp.Infrastructure", "SerenApp.Infrastructure\SerenApp.Infrastructure.csproj", "{9D685677-6692-4F8F-A239-CFA872DAF15C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SugoCode.EventHubs", "SugoCode.EventHubs\SugoCode.EventHubs.csproj", "{724A4D1B-287B-461A-8940-26A75A20ADE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{9D685677-6692-4F8F-A239-CFA872DAF15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D685677-6692-4F8F-A239-CFA872DAF15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D685677-6692-4F8F-A239-CFA872DAF15C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{724A4D1B-287B-461A-8940-26A75A20ADE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724A4D1B-287B-461A-8940-26A75A20ADE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724A4D1B-287B-461A-8940-26A75A20ADE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724A4D1B-287B-461A-8940-26A75A20ADE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
