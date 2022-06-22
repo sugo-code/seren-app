@@ -1,8 +1,14 @@
 @page "/"
 @namespace SerenApp.Web.Pages
+@using SerenApp.Web.Logic
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
+    var InitialState = new InitialState()
+    {
+        AntiForgeryToken = Xsrf.GetAndStoreTokens(HttpContext).RequestToken
+    };
 }
 
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+<component type="typeof(App)" param-InitialState="@InitialState" render-mode="ServerPrerendered" />

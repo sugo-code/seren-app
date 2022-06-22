@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SerenApp.Core.Interfaces
 {
-    public interface IUserRepository : IRepository<User, Guid>
+    public interface IAdminRepository : IRepository<Admin, Guid>
     {
-        public Task<User> GetByPhoneNumber(string phoneNumber);
+        public Task<Admin> GetByUsername(string username);
     }
 }

@@ -1,0 +1,22 @@
+@page "/identity/account/register"
+@model RegisterModel
+
+<form method="POST">
+
+    <label for="phone-number">PhoneNumber</label>
+    <input asp-for="Model.PhoneNumber" type="text" id="phone-number" />
+
+    <label for="password">Password</label>
+    <input asp-for="Model.Password" type="password" id="password" />
+
+    <label for="confirm-password">Password</label>
+    <input asp-for="Model.ConfirmPassword" type="password" id="confirm-password" />
+
+    <button type="submit">Submit</button>
+</form>
+
+<p>@Model.ErrorMessage</p>
+
+@if(Model.RegistrationSuccessful) {
+    <p>Succesful registration!</p>
+}

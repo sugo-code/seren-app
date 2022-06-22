@@ -9,44 +9,44 @@ using System.Threading.Tasks;
 
 namespace SerenApp.Infrastructure.DAL
 {
-    public class UserRepository : IUserRepository
+    public class AdminRepository : IAdminRepository
     {
         private readonly AppDbContext context;
-        public UserRepository(AppDbContext context)
+        public AdminRepository(AppDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<User> Delete(User item)
+        public async Task<Admin> Delete(Admin item)
         {
             context.Remove(item);
             await context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<Admin>> GetAll()
         {
-            return await context.Users.ToListAsync();
+            return await context.Admins.ToListAsync();
         }
 
-        public async Task<User> GetById(Guid id)
+        public async Task<Admin> GetById(Guid id)
         {
-            return await context.Users.FirstAsync(d => d.ID == id);
+            return await context.Admins.FirstAsync(d => d.ID == id);
         }
 
-        public async Task<User> GetByPhoneNumber(string phoneNumber)
+        public async Task<Admin> GetByUsername(string username)
         {
-            return await context.Users.FirstAsync(d => d.PhoneNumber == phoneNumber);
+            return await context.Admins.FirstAsync(d => d.Username == username);
         }
 
-        public async Task<User> Insert(User item)
+        public async Task<Admin> Insert(Admin item)
         {
             await context.AddAsync(item);
             await context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<User> Update(User item)
+        public async Task<Admin> Update(Admin item)
         {
             context.Update(item);
             await context.SaveChangesAsync();
