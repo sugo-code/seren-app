@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace SugoCode.EventHubs
 {
+
     public class Startup : FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
@@ -28,4 +29,5 @@ namespace SugoCode.EventHubs
             
         }
     }
+
 }
