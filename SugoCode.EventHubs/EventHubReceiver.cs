@@ -12,17 +12,17 @@ using Newtonsoft.Json.Linq;
 using SerenApp.Core.Interfaces;
 using SerenApp.Core.Model;
 using SerenApp.Core.Utility;
-using SerenApp.Infrastructure.Services.CosmosTableAPI;
+using SerenApp.Infrastructure.DAL.CosmosTableAPI;
 
 namespace SugoCode.EventHubs
 {
     public class EventHubReceiver
     {
-        private readonly ITableAPI _tableClient;
+        private readonly IDeviceDataRepository _repository;
 
-        public EventHubReceiver(ITableAPI tableAPI)
+        public EventHubReceiver(IDeviceDataRepository repository)
         {
-            _tableClient = tableAPI;
+            _repository = repository;
         }
 
         [FunctionName("EventHubReceiver")]
@@ -30,7 +30,7 @@ namespace SugoCode.EventHubs
         {
             var exceptions = new List<Exception>();
 
-            var deviceDataTelemetries = new List<DeviceDataTable>();
+            var deviceDataTelemetries = new List<DeviceData>();
 
             // Fetching all Events from EventsHub
             log.LogInformation("Reading EventData... ");
@@ -59,7 +59,7 @@ namespace SugoCode.EventHubs
 
                             log.LogInformation("Parsing Data to JObject... ");
                             var dataBodyObject = JObject.Parse(messageBody);
-                            DeviceDataTable deviceData = MapToDeviceDataTable.Map(dataBodyObject);
+                            DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                             log.LogInformation($"Mapped To: \n{deviceData}");
                             deviceDataTelemetries.Add(deviceData);
                         }
@@ -81,7 +81,7 @@ namespace SugoCode.EventHubs
                                 log.LogInformation(parsedObject["data"]["body"].ToString());
 
                                 var dataBodyObject = JObject.Parse(parsedObject["data"]["body"].ToString());
-                                DeviceDataTable deviceData = MapToDeviceDataTable.Map(dataBodyObject);
+                                DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                                 deviceDataTelemetries.Add(deviceData);
                             }
                         }
@@ -102,7 +102,7 @@ namespace SugoCode.EventHubs
             {
                 try
                 {
-                    await _tableClient.InsertManyAsync(deviceDataTelemetries);
+                    await _repository.InsertManyAsync(deviceDataTelemetries);
                 }
                 catch (Exception e)
                 {

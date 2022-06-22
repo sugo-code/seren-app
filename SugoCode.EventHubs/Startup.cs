@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SerenApp.Core.Interfaces;
 using SerenApp.Infrastructure.DAL;
-using SerenApp.Infrastructure.Services.CosmosTableAPI;
+using SerenApp.Infrastructure.DAL.CosmosTableAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,8 @@ namespace SugoCode.EventHubs
             //    options.UseCosmos(Environment.GetEnvironmentVariable("CosmosTableConn"), tableName);
             //});
 
-            builder.Services.AddScoped<ITableAPI, TableAPI>();
+            builder.Services.AddScoped<TableDbContext>();
+            builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
             
         }
     }

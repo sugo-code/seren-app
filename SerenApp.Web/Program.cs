@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using SerenApp.Core.Interfaces;
-using SerenApp.Infrastructure.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SerenApp.Web.Logic;
+using SerenApp.Infrastructure.DAL.EntityFrameworkCore;
+using SerenApp.Infrastructure.DAL.CosmosTableAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase(dbName);
     else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
 });
+builder.Services.AddScoped<TableDbContext>();
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

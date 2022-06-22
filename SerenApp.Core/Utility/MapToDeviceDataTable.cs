@@ -10,22 +10,26 @@ namespace SerenApp.Core.Utility
 {
     public static class MapToDeviceDataTable
     {
-        public static DeviceDataTable Map(JObject data)
+        public static DeviceData Map(JObject data)
         {
-            DeviceDataTable deviceDataTable = new DeviceDataTable();
+            DeviceData deviceData = new DeviceData();
 
-            deviceDataTable.PartitionKey = data["deviceId"].ToString();
-            deviceDataTable.RowKey = Guid.NewGuid().ToString();
-            deviceDataTable.Timestamp = DateTimeOffset.Parse(data["timeStamp"].ToString());
-            deviceDataTable.BodyTemperature = double.Parse((string)data["bodyTemp"]);
-            deviceDataTable.BloodPressure = int.Parse((string)data["bloodPrs"]);
-            deviceDataTable.BloodOxygen = int.Parse((string)data["bloodOxg"]);
-            deviceDataTable.HeartFrequency = int.Parse((string)data["heartFrq"]);
-            deviceDataTable.WalkCount = int.Parse((string)data["walkCount"]);
-            deviceDataTable.Sleeping = bool.Parse((string)data["isSleeping"]);
-            deviceDataTable.Fallen = bool.Parse((string)data["isFallen"]);
+            deviceData.ID = new DeviceDataId
+            {
+                DeviceId = Guid.Parse(data["deviceId"].ToString()),
+                Timestamp = DateTime.Parse(data["timeStamp"].ToString())
+            };
 
-            return deviceDataTable;
+            deviceData.Battery = double.Parse((string)data["battery"]);
+            deviceData.BodyTemperature = double.Parse((string)data["bodyTemp"]);
+            deviceData.BloodPressure = int.Parse((string)data["bloodPrs"]);
+            deviceData.BloodOxygen = int.Parse((string)data["bloodOxg"]);
+            deviceData.HeartFrequency = int.Parse((string)data["heartFrq"]);
+            deviceData.WalkCount = int.Parse((string)data["walkCount"]);
+            deviceData.Sleeping = bool.Parse((string)data["isSleeping"]);
+            deviceData.Fallen = bool.Parse((string)data["isFallen"]);
+
+            return deviceData;
         }
     }
 }

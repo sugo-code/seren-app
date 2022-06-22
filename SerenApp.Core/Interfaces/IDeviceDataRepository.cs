@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace SerenApp.Core.Interfaces
 {
-    public interface IDeviceDataRepository : IRepository<DeviceData, DateTime>
+    public interface IDeviceDataRepository : IRepository<DeviceData, DeviceDataId>
     {
         public Task<IEnumerable<DeviceData>> GetManyByDevice(Device d);
+        Task<int> InsertManyAsync(IEnumerable<DeviceData> devices);
     }
 }

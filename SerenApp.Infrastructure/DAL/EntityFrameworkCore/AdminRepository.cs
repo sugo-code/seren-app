@@ -7,46 +7,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SerenApp.Infrastructure.DAL
+namespace SerenApp.Infrastructure.DAL.EntityFrameworkCore
 {
-    public class DeviceDataRepository : IDeviceDataRepository
+    public class AdminRepository : IAdminRepository
     {
         private readonly AppDbContext context;
-        public DeviceDataRepository(AppDbContext context)
+        public AdminRepository(AppDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<DeviceData> Delete(DeviceData item)
+        public async Task<Admin> Delete(Admin item)
         {
             context.Remove(item);
             await context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<IEnumerable<DeviceData>> GetAll()
+        public async Task<IEnumerable<Admin>> GetAll()
         {
-            return await context.DeviceData.ToListAsync();
+            return await context.Admins.ToListAsync();
         }
 
-        public async Task<DeviceData> GetById(DateTime id)
+        public async Task<Admin> GetById(Guid id)
         {
-            return await context.DeviceData.FirstAsync(d => d.ID == id);
+            return await context.Admins.FirstAsync(d => d.ID == id);
         }
 
-        public async Task<IEnumerable<DeviceData>> GetManyByDevice(Device d)
+        public async Task<Admin> GetByUsername(string username)
         {
-            return await context.DeviceData.Where(x => x.Device == d).ToListAsync();
+            return await context.Admins.FirstAsync(d => d.Username == username);
         }
 
-        public async Task<DeviceData> Insert(DeviceData item)
+        public async Task<Admin> Insert(Admin item)
         {
             await context.AddAsync(item);
             await context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<DeviceData> Update(DeviceData item)
+        public async Task<Admin> Update(Admin item)
         {
             context.Update(item);
             await context.SaveChangesAsync();
