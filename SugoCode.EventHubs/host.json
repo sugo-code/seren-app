@@ -1,12 +1,23 @@
 {
   "version": "2.0",
+  //"bindings": [
+  //  {
+  //    "type": "eventHubTrigger",
+  //    "name": "events",
+  //    "direction": "in",
+  //    "eventHubName": "sugocode-hub",
+  //    "cardinality": "many",
+  //    "connection": "sugocode-hub-ns_acctest_EVENTHUB",
+  //    "consumerGroup": "$Default"
+  //  }
+  //],
   "bindings": [
     {
       "type": "eventHubTrigger",
       "name": "myIoTHubMessage",
       "direction": "in",
       "eventHubName": "sugocode-hub",
-      "connection": "zanetti-iothub_events_IOTHUB",
+      "connection": "sugocode-hub-ns_acctest_EVENTHUB",
       "consumerGroup": "$Default"
     }
   ],
