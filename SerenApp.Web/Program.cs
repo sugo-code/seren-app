@@ -11,12 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var dbName = builder.Configuration.GetValue<string>("DatabaseName");
+    var dbName = builder.Configuration.GetValue<string>("SQLDatabaseName");
 
     if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase(dbName);
-    else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
+    else options.UseCosmos(builder.Configuration.GetConnectionString("CosmosSQL"), dbName);
 });
-builder.Services.AddScoped<TableDbContext>();
+
+builder.Services.AddScoped<TableDbContext>(x => {
+    var connectionString = builder.Configuration.GetConnectionString("CosmosTable");
+    var tableName = builder.Configuration.GetValue<string>("TableName");
+    return new TableDbContext(connectionString, tableName);
+});
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

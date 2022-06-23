@@ -11,26 +11,11 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
 {
     public class TableDbContext
     {
-
-        //private readonly string conn = Environment.GetEnvironmentVariable("CosmosTableConn");
-        //private readonly string tableName = Environment.GetEnvironmentVariable("CosmosTableName");
-        //private readonly string accountName = Environment.GetEnvironmentVariable("AccountName");
-        //private readonly string endpoint = Environment.GetEnvironmentVariable("Endpoint");
-        //private readonly string primaryKey = Environment.GetEnvironmentVariable("PrimaryKey");
-
-        private readonly string conn = "DefaultEndpointsProtocol=https;AccountName=sugocode-cosmosdb-account-table;AccountKey=0hfUq9PAr7xHZ2PyLQtEfxONoL5h0mxLKKMD4YmLV5eMeKn2Fcd7kRUZkg4MLUXYFQl4eQbRhZ5MexLR5ZNZqg==;TableEndpoint=https://sugocode-cosmosdb-account-table.table.cosmos.azure.com:443/;";
-        private readonly string tableName = "sugocode-db-table";
-        private readonly string accountName = "sugocode-cosmosdb-account-table";
-        private readonly string endpoint = "https://sugocode-cosmosdb-account-table.table.cosmos.azure.com:443/";
-        private readonly string primaryKey = "0hfUq9PAr7xHZ2PyLQtEfxONoL5h0mxLKKMD4YmLV5eMeKn2Fcd7kRUZkg4MLUXYFQl4eQbRhZ5MexLR5ZNZqg==";
-
         private readonly TableClient client;
 
-        public TableDbContext() {
-            this.client = new TableClient(
-            new Uri(endpoint),
-            tableName,
-            new TableSharedKeyCredential(accountName, primaryKey));
+        public TableDbContext(string connectionString, string tableName) {
+
+            this.client = new TableClient(connectionString, tableName);
         }
 
         public async Task InsertManyAsync(IEnumerable<DeviceDataTableEntity> devicesData)

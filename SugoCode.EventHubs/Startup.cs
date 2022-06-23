@@ -6,6 +6,7 @@ using SerenApp.Infrastructure.DAL;
 using SerenApp.Infrastructure.DAL.CosmosTableAPI;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,11 @@ namespace SugoCode.EventHubs
             //    options.UseCosmos(Environment.GetEnvironmentVariable("CosmosTableConn"), tableName);
             //});
 
-            builder.Services.AddScoped<TableDbContext>();
+            builder.Services.AddScoped<TableDbContext>(x => {
+                var connectionString = ConfigurationManager.ConnectionStrings["Cosmos"].ToString();
+                var tableName = ConfigurationManager.AppSettings["TableName"];
+                return new TableDbContext(connectionString, tableName);
+            });
             builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
             
         }
