@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "SugoCode.EventHubs": {
+      "commandName": "Project"
+    }
+  }
+}
