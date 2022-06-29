@@ -1,0 +1,77 @@
+@page "/profile"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Profile</h3>
+
+<h4>Telephone Number</h4>
+<p>Current Phone number: @user.PhoneNumber</p>
+
+<h4>Emergency Contact</h4>
+@if(string.IsNullOrEmpty(user.SecureContactPhoneNumber))
+{
+    <p>No emergency contact set</p>
+}
+else
+{
+    <p>Current Emergency Phone number: @user.SecureContactPhoneNumber</p>
+}
+
+<p>New emergency contact phone number</p>
+<input type="text" placeholder="Phone" @bind="newPhone"/>
+<button @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
+<p>@status</p>
+
+@code {
+
+    private User user;
+    private string newPhone;
+    private string status;
+
+    private async void ChangePhoneNumber()
+    {
+        status = "";
+        string parsed;
+
+        try
+        {
+            parsed = Logic.AccountLogic.ParsePhoneNumber(newPhone);    
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        user.SecureContactPhoneNumber = parsed;
+
+        try
+        {
+            user = await Users.Update(user); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully updated!";
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+        }
+    }
+}

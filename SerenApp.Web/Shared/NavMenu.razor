@@ -13,6 +13,19 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
+            <AuthorizeView Roles="@Logic.AccountLogic.UserRole">
+                        <NavLink class="nav-link" href="/devices">
+                            <span class="oi oi-home" aria-hidden="true"></span> Devices
+                        </NavLink>
+                        <NavLink class="nav-link" href="/profile">
+                            <span class="oi oi-home" aria-hidden="true"></span> Profile
+                        </NavLink>
+            </AuthorizeView>
+            <AuthorizeView Roles="@Logic.AccountLogic.AdminRole">
+                <NavLink class="nav-link" href="/device-management">
+                    <span class="oi oi-home" aria-hidden="true"></span> Devices
+                </NavLink>
+            </AuthorizeView>
             <AuthorizeView>
                 <Authorized>
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -21,20 +34,20 @@
                     <form @ref="LogoutForm" method="post" action="/identiy/account/logout" hidden>
                         <input name="__RequestVerificationToken" type="hidden" value="@TokenProvider.AntiForgeryToken" />
                     </form>
-                    <a class="nav-link" href="" @onclick="Logout">
+                    <NavLink class="nav-link" href="" @onclick="Logout">
                         <span class="oi oi-home" aria-hidden="true"></span> Log out
-                    </a>
+                    </NavLink>
                 </Authorized>
                 <NotAuthorized>
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true"></span> Home
                     </NavLink>
-                    <a class="nav-link" href="Identity/Account/Login">
+                    <NavLink class="nav-link" href="Identity/Account/Login">
                         <span class="oi oi-home" aria-hidden="true"></span> Login
-                    </a>
-                    <a class="nav-link" href="Identity/Account/Register">
+                    </NavLink>
+                    <NavLink class="nav-link" href="Identity/Account/Register">
                         <span class="oi oi-home" aria-hidden="true"></span> Register
-                    </a>
+                    </NavLink>
                 </NotAuthorized>
             </AuthorizeView>
             

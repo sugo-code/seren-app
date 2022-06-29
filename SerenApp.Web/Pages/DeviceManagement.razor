@@ -1,0 +1,87 @@
+@page "/device-management"
+@attribute [Authorize(Roles = @Logic.AccountLogic.AdminRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IDeviceRepository Devices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Device Management</h3>
+
+<h4>Add new Device</h4>
+<p>Device Id</p>
+<input type="text" placeholder="Device Id" @bind="newDeviceId"/>
+<button @onclick="AddDevice" disabled=@string.IsNullOrWhiteSpace(newDeviceId)>Add</button>
+<p>@status</p>
+
+<h4>Device List</h4>
+<ul>
+    @foreach(var device in devices)
+    {
+        <li>
+            <p>Id: @device.ID</p>
+            <p>Name: @device.Name</p>
+            <button @onclick="() => RemoveDevice(device)">Remove</button>
+        </li>
+    }
+</ul>
+
+@code {
+
+    private IEnumerable<Core.Model.Device> devices;
+    private string newDeviceId;
+    private string status;
+
+    private async void AddDevice()
+    {
+        status = "";
+        Guid parsed;
+
+        try
+        {
+            parsed = Guid.Parse(newDeviceId);    
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        try
+        {
+            var device = await Devices.Insert(new Core.Model.Device{ID = parsed, Name = "SerenBracelet", FirmwareVersion = "1.0"});
+            //devices.Add(device);
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully added!";
+    }
+
+    private async void RemoveDevice(Core.Model.Device device)
+    {
+        status = "";
+
+        try
+        {
+            await Devices.Delete(device);
+            //devices.Remove(device);
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully removed!";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.devices = await Devices.GetAll();
+    }
+}

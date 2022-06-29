@@ -1,0 +1,69 @@
+@page "/devices/{DeviceId}"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IDeviceRepository Devices
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavManager
+
+<h3>Device</h3>
+
+<h4>Device Name</h4>
+<p>Current Device Name: @device.Name</p>
+<p>New Device Name</p>
+<input type="text" placeholder="Device Name" @bind="newDeviceName"/>
+<button @onclick="AddDevice" disabled=@string.IsNullOrWhiteSpace(newDeviceName)>Update</button>
+<p>@status</p>
+
+<h4>Device Data</h4>
+<p>TODO</p>
+
+@code {
+
+    private User user;
+    private Core.Model.Device device;
+    private string newDeviceName;
+    private string status;
+
+    [Parameter]
+    public string DeviceId { get; set; }
+
+    private async void AddDevice()
+    {
+        status = "";
+
+        device.Name = newDeviceName;
+
+        try
+        {
+            device = await Devices.Update(device); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully added!";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+            try {
+                device = this.user.Devices.First(x => x.ID == Guid.Parse(DeviceId));
+            }
+            catch {
+                NavManager.NavigateTo("/");
+            }
+        }
+    }
+}

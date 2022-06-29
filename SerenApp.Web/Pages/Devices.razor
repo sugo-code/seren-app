@@ -1,0 +1,88 @@
+@page "/devices"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IDeviceRepository _devices
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Devices</h3>
+
+@if(user.Devices is not null)
+{
+<ul>
+    @foreach(var device in user.Devices)
+    {
+    <li><NavLink href=@($"/devices/{device.ID}")>@device.Name</NavLink></li>
+    }
+</ul>    
+}
+
+<h4>Add new Device</h4>
+<p>Device Id</p>
+<input type="text" placeholder="Device Id" @bind="newDeviceId"/>
+<button @onclick="AddDevice" disabled=@string.IsNullOrWhiteSpace(newDeviceId)>Add</button>
+<p>@status</p>
+
+@code {
+
+    private User user;
+    private string newDeviceId;
+    private string status;
+
+    private async void AddDevice()
+    {
+        status = "";
+        Guid parsed;
+        Core.Model.Device device;
+
+        try
+        {
+            parsed = Guid.Parse(newDeviceId);    
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        try
+        {
+            device = await _devices.GetById(parsed); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        if (user.Devices is null) user.Devices = new List<Core.Model.Device>(); 
+
+        user.Devices.Add(device);
+
+        try
+        {
+            user = await Users.Update(user); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully added!";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+        }
+    }
+}

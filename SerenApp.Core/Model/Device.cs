@@ -9,5 +9,6 @@ namespace SerenApp.Core.Model
     public class Device : AEntityBase<Guid>
     {
         public string FirmwareVersion { get; set; }
+        public string Name { get; set; }
     }
 }
