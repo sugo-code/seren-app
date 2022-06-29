@@ -11,10 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var dbName = builder.Configuration.GetValue<string>("DatabaseName");
-
-    if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase(dbName);
-    else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
+    if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase("test");
+    else options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"));
 });
 builder.Services.AddScoped<TableDbContext>();
 
