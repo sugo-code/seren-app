@@ -9,29 +9,32 @@
 
 <h3>Profile</h3>
 
-<h4>Telephone Number</h4>
-<p>Current Phone number: @user.PhoneNumber</p>
+<p><span class="oi oi-phone"></span> Phone number: @user.PhoneNumber</p>
 
-<h4>Emergency Contact</h4>
-@if(string.IsNullOrEmpty(user.SecureContactPhoneNumber))
+<p>
+    <span class="oi oi-warning"></span> 
+    @(string.IsNullOrEmpty(user.SecureContactPhoneNumber) ? "No emergency contact set" : @user.SecureContactPhoneNumber)
+    <button class="btn btn-outline-primary" @onclick="() => toggleEditSecureContact = !toggleEditSecureContact" ><span class="oi oi-pencil"></span></button>
+</p>
+
+@if(toggleEditSecureContact)
 {
-    <p>No emergency contact set</p>
-}
-else
-{
-    <p>Current Emergency Phone number: @user.SecureContactPhoneNumber</p>
+    <div>New emergency contact phone number</div>
+    <input class="form-control" type="text" placeholder="Phone" @bind="newPhone"/>
+    <button class="btn btn-primary" @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
 }
 
-<p>New emergency contact phone number</p>
-<input type="text" placeholder="Phone" @bind="newPhone"/>
-<button @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
-<p>@status</p>
+@if(!string.IsNullOrEmpty(status))
+{
+    <div class="alert alert-danger">@status</div>
+}
 
 @code {
 
     private User user;
     private string newPhone;
     private string status;
+    private bool toggleEditSecureContact = false;
 
     private async void ChangePhoneNumber()
     {

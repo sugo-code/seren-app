@@ -1,72 +1,58 @@
 @inject Logic.TokenProvider TokenProvider
 @inject IJSRuntime JSRuntime
 
-<div class="top-row ps-3 navbar navbar-dark">
+<nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">SerenApp.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-brand mb-0 h1">SerenApp</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <AuthorizeView Roles="@Logic.AccountLogic.UserRole">
-                        <NavLink class="nav-link" href="/devices">
-                            <span class="oi oi-home" aria-hidden="true"></span> Devices
-                        </NavLink>
-                        <NavLink class="nav-link" href="/profile">
-                            <span class="oi oi-home" aria-hidden="true"></span> Profile
-                        </NavLink>
-            </AuthorizeView>
-            <AuthorizeView Roles="@Logic.AccountLogic.AdminRole">
-                <NavLink class="nav-link" href="/device-management">
-                    <span class="oi oi-home" aria-hidden="true"></span> Devices
+        <div class="collapse navbar-collapse" id="navbar-menu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
                 </NavLink>
-            </AuthorizeView>
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                <AuthorizeView Roles="@Logic.AccountLogic.UserRole">
+                    <NavLink class="nav-link" href="/devices">
+                        <span class="oi oi-wifi" aria-hidden="true"></span> Devices
                     </NavLink>
-                    <form @ref="LogoutForm" method="post" action="/identiy/account/logout" hidden>
-                        <input name="__RequestVerificationToken" type="hidden" value="@TokenProvider.AntiForgeryToken" />
-                    </form>
-                    <NavLink class="nav-link" href="" @onclick="Logout">
-                        <span class="oi oi-home" aria-hidden="true"></span> Log out
+                    <NavLink class="nav-link" href="/profile">
+                        <span class="oi oi-person" aria-hidden="true"></span> Profile
                     </NavLink>
-                </Authorized>
-                <NotAuthorized>
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                </AuthorizeView>
+                <AuthorizeView Roles="@Logic.AccountLogic.AdminRole">
+                    <NavLink class="nav-link" href="/device-management">
+                        <span class="oi oi-cog" aria-hidden="true"></span> Devices
                     </NavLink>
-                    <NavLink class="nav-link" href="Identity/Account/Login">
-                        <span class="oi oi-home" aria-hidden="true"></span> Login
-                    </NavLink>
-                    <NavLink class="nav-link" href="Identity/Account/Register">
-                        <span class="oi oi-home" aria-hidden="true"></span> Register
-                    </NavLink>
-                </NotAuthorized>
-            </AuthorizeView>
-            
+                </AuthorizeView>
+                <AuthorizeView>
+                    <Authorized>
+                        <form @ref="LogoutForm" method="post" action="/identiy/account/logout" hidden>
+                            <input name="__RequestVerificationToken" type="hidden" value="@TokenProvider.AntiForgeryToken" />
+                        </form>
+                        <NavLink class="nav-link    ms-0 ms-lg-auto" @onclick="Logout">
+                            <span class="oi oi-account-logout" aria-hidden="true"></span> Log out
+                        </NavLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="nav-link" href="Identity/Account/Login">
+                            <span class="oi oi-home" aria-hidden="true"></span> Login
+                        </NavLink>
+                        <NavLink class="nav-link" href="Identity/Account/Register">
+                            <span class="oi oi-home" aria-hidden="true"></span> Register
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView> 
+            </ul>
         </div>
-    </nav>
-</div>
+    </div>
+</nav>
+
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private ElementReference LogoutForm;
     private IJSObjectReference module;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
 
     private async Task Logout()
     {
