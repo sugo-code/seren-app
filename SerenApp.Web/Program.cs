@@ -14,7 +14,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     if (builder.Environment.IsDevelopment()) options.UseSqlServer(builder.Configuration.GetConnectionString("LocalSql"), b => b.MigrationsAssembly("SerenApp.Web"));
     else options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"), b => b.MigrationsAssembly("SerenApp.Web"));
 });
-builder.Services.AddScoped<TableDbContext>();
+
+builder.Services.AddScoped<TableDbContext>(x => {
+    var connectionString = builder.Configuration.GetConnectionString("CosmosTable");
+    var tableName = builder.Configuration.GetValue<string>("TableName");
+    return new TableDbContext(connectionString, tableName);
+});
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
