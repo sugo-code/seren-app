@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var dbName = builder.Configuration.GetValue<string>("DatabaseName");
 
+    options.UseLazyLoadingProxies();
     if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase(dbName);
     else options.UseCosmos(builder.Configuration.GetConnectionString("Cosmos"), dbName);
 });

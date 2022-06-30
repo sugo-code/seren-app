@@ -12,6 +12,6 @@ namespace SerenApp.Core.Model
         public string PasswordHash { get; set; }
         public string PhoneNumber { get; set; }
         public string SecureContactPhoneNumber { get; set; }
-        public ICollection<Device> Devices { get; set; }
+        public virtual ICollection<Device> Devices { get; set; }
     }
 }
