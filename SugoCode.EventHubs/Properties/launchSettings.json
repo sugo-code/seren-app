@@ -1,14 +1,7 @@
 {
   "profiles": {
     "SugoCode.EventHubs": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "PrimaryKey": "0hfUq9PAr7xHZ2PyLQtEfxONoL5h0mxLKKMD4YmLV5eMeKn2Fcd7kRUZkg4MLUXYFQl4eQbRhZ5MexLR5ZNZqg==",
-        "CosmosTableName": "sugocode-db-table",
-        "CosmosTableConn": "DefaultEndpointsProtocol=https;AccountName=sugocode-cosmosdb-account-table;AccountKey=0hfUq9PAr7xHZ2PyLQtEfxONoL5h0mxLKKMD4YmLV5eMeKn2Fcd7kRUZkg4MLUXYFQl4eQbRhZ5MexLR5ZNZqg==;TableEndpoint=https:/sugocode-cosmosdb-account-table.table.cosmos.azure.com:443/;",
-        "Endpoint": "https:/sugocode-cosmosdb-account-table.table.cosmos.azure.com:443"
-      },
-      "remoteDebugEnabled": false
+      "commandName": "Project"
     }
   }
 }
