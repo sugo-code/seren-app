@@ -9,29 +9,64 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 
-<h3>Device</h3>
+<section class="mt-3">
+    <h3>Device</h3>
+</section>
 
-<h4>Device Name</h4>
-<p>Current Device Name: @device.Name</p>
-<p>New Device Name</p>
-<input type="text" placeholder="Device Name" @bind="newDeviceName"/>
-<button @onclick="AddDevice" disabled=@string.IsNullOrWhiteSpace(newDeviceName)>Update</button>
-<p>@status</p>
+@if(!string.IsNullOrEmpty(status))
+{
+    <section class="mt-3">
+        <Error>@status</Error>
+    </section>
+}
 
-<h4>Device Data</h4>
-<p>TODO</p>
+@if(loading)
+{
+    <Spinner/>
+}
+else
+{
+    <section class="mt-3">
+        <p>
+            <span class="oi oi-wifi"></span> 
+            Device Name: @device.Name
+            <button class="btn btn-outline-primary" @onclick="() => editDeviceName = !editDeviceName" ><span class="oi oi-pencil"></span></button>
+        </p>
+        @if(editDeviceName)
+        {
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">New Device Name</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="text" placeholder="Device Name" @bind="newDeviceName"/>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="ChangeDeviceName" disabled=@string.IsNullOrWhiteSpace(newDeviceName)>Update</button>
+                </div>
+            </div>
+        }
+    </section>
+
+    <section class="mt-3">
+        <h4>Device Data</h4>
+        <p>TODO</p>
+    </section>
+}
 
 @code {
 
     private User user;
     private Core.Model.Device device;
-    private string newDeviceName;
-    private string status;
+    private string newDeviceName = "";
+    private string status = "";
+    private bool loading = true;
+    private bool editDeviceName = false;
 
     [Parameter]
     public string DeviceId { get; set; }
 
-    private async void AddDevice()
+    private async Task ChangeDeviceName()
     {
         status = "";
 
@@ -46,8 +81,6 @@
             status = e.Message;
             return;
         }
-
-        status = "successfully added!";
     }
 
     protected override async Task OnInitializedAsync()
@@ -57,12 +90,17 @@
 
         if (user.Identity.IsAuthenticated)
         {
+            loading = true;
             this.user = await Users.GetByPhoneNumber(user.Identity.Name);
             try {
                 device = this.user.Devices.First(x => x.ID == Guid.Parse(DeviceId));
             }
             catch {
                 NavManager.NavigateTo("/");
+            }
+            finally
+            {
+                loading = false;
             }
         }
     }

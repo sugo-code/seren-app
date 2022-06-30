@@ -7,34 +7,59 @@
 @inject IUserRepository Users
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>Profile</h3>
+<section class="mt-3">
+    <h3>Profile</h3>
+</section>
 
-<p><span class="oi oi-phone"></span> Phone number: @user.PhoneNumber</p>
-
-<p>
-    <span class="oi oi-warning"></span> 
-    @(string.IsNullOrEmpty(user.SecureContactPhoneNumber) ? "No emergency contact set" : @user.SecureContactPhoneNumber)
-    <button class="btn btn-outline-primary" @onclick="() => toggleEditSecureContact = !toggleEditSecureContact" ><span class="oi oi-pencil"></span></button>
-</p>
-
-@if(toggleEditSecureContact)
+@if(loading)
 {
-    <div>New emergency contact phone number</div>
-    <input class="form-control" type="text" placeholder="Phone" @bind="newPhone"/>
-    <button class="btn btn-primary" @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
+    <Spinner/>
+}
+else
+{
+    <section class="mt-3">
+        <p><span class="oi oi-phone"></span> Phone number: @user?.PhoneNumber</p>
+
+        <p>
+            <span class="oi oi-warning"></span> 
+            @(string.IsNullOrEmpty(user?.SecureContactPhoneNumber) ? "No emergency contact set" : $"Emergency Contact: {user?.SecureContactPhoneNumber}")
+            <button class="btn btn-outline-primary" @onclick="() => editSecureContact = !editSecureContact" ><span class="oi oi-pencil"></span></button>
+        </p>
+
+        @if(editSecureContact)
+        {
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">New emergency contact phone number</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="text" placeholder="Phone" @bind="newPhone"/>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
+                </div>
+            </div>
+            
+            
+            
+        }
+    </section>
 }
 
-@if(!string.IsNullOrEmpty(status))
+@if (!string.IsNullOrEmpty(status))
 {
-    <div class="alert alert-danger">@status</div>
+    <section class="mt-3">
+        <Error>@status</Error>
+    </section>
 }
 
 @code {
 
     private User user;
-    private string newPhone;
-    private string status;
-    private bool toggleEditSecureContact = false;
+    private string newPhone = "";
+    private string status = "";
+    private bool editSecureContact = false;
+    private bool loading = true;
 
     private async void ChangePhoneNumber()
     {
@@ -74,7 +99,9 @@
 
         if (user.Identity.IsAuthenticated)
         {
+            loading = true;
             this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+            loading = false;
         }
     }
 }

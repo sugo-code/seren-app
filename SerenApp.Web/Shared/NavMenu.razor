@@ -30,16 +30,16 @@
                         <form @ref="LogoutForm" method="post" action="/identiy/account/logout" hidden>
                             <input name="__RequestVerificationToken" type="hidden" value="@TokenProvider.AntiForgeryToken" />
                         </form>
-                        <NavLink class="nav-link    ms-0 ms-lg-auto" @onclick="Logout">
+                        <NavLink class="nav-link ms-0 ms-lg-auto" @onclick="Logout">
                             <span class="oi oi-account-logout" aria-hidden="true"></span> Log out
                         </NavLink>
                     </Authorized>
                     <NotAuthorized>
                         <NavLink class="nav-link" href="Identity/Account/Login">
-                            <span class="oi oi-home" aria-hidden="true"></span> Login
+                            <span class="oi oi-account-login" aria-hidden="true"></span> Login
                         </NavLink>
                         <NavLink class="nav-link" href="Identity/Account/Register">
-                            <span class="oi oi-home" aria-hidden="true"></span> Register
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Register
                         </NavLink>
                     </NotAuthorized>
                 </AuthorizeView> 
