@@ -1,0 +1,8 @@
+<section class="mt-3">
+    <div class="alert alert-danger">@ChildContent</div>
+</section>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

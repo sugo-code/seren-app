@@ -10,7 +10,7 @@ namespace SerenApp.Web.Logic
 {
     public class AccountLogic
     {
-        private readonly PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
+        private static readonly PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
         private readonly IUserRepository users;
         private readonly IAdminRepository admins;
         private readonly IHttpContextAccessor contextAccessor;
@@ -22,10 +22,10 @@ namespace SerenApp.Web.Logic
         {
             this.users = users;
             this.admins = admins;
-            this.contextAccessor = contextAccessor;
+            this.contextAccessor = contextAccessor;         
         }
 
-        private string ParsePhoneNumber(string numberStr)
+        public static string ParsePhoneNumber(string numberStr)
         {
             var number = phoneNumberUtil.Parse(numberStr, null);
             return phoneNumberUtil.Format(number, PhoneNumberFormat.E164);
@@ -73,7 +73,7 @@ namespace SerenApp.Web.Logic
 
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()));
-            claims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
+            claims.Add(new Claim(ClaimTypes.Name, user.PhoneNumber));
             claims.Add(new Claim(ClaimTypes.Role, UserRole));
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

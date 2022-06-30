@@ -3,14 +3,44 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <base href="~/" />
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/lib/open-iconic/font/css/open-iconic-bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-primary">
+    <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1">Navbar</span>
+            <span class="navbar-brand mb-0 h1">SerenApp</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <span class="oi oi-home" aria-hidden="true"></span> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/identity/account/login">
+                            <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/identity/account/register">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
-    @RenderBody()
+    <div class="d-flex min-vh-100 align-items-center justify-content-center">
+        <div>
+            @RenderBody()
+        </div>
+    </div>
 </body>
 </html>

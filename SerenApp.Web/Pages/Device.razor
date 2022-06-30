@@ -1,0 +1,107 @@
+@page "/devices/{DeviceId}"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IDeviceRepository Devices
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavManager
+
+<section class="mt-3">
+    <h3>Device</h3>
+</section>
+
+@if(!string.IsNullOrEmpty(status))
+{
+    <section class="mt-3">
+        <Error>@status</Error>
+    </section>
+}
+
+@if(loading)
+{
+    <Spinner/>
+}
+else
+{
+    <section class="mt-3">
+        <p>
+            <span class="oi oi-wifi"></span> 
+            Device Name: @device.Name
+            <button class="btn btn-outline-primary" @onclick="() => editDeviceName = !editDeviceName" ><span class="oi oi-pencil"></span></button>
+        </p>
+        @if(editDeviceName)
+        {
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">New Device Name</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="text" placeholder="Device Name" @bind="newDeviceName"/>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="ChangeDeviceName" disabled=@string.IsNullOrWhiteSpace(newDeviceName)>Update</button>
+                </div>
+            </div>
+        }
+    </section>
+
+    <section class="mt-3">
+        <h4>Device Data</h4>
+        <p>TODO</p>
+    </section>
+}
+
+@code {
+
+    private User user;
+    private Core.Model.Device device;
+    private string newDeviceName = "";
+    private string status = "";
+    private bool loading = true;
+    private bool editDeviceName = false;
+
+    [Parameter]
+    public string DeviceId { get; set; }
+
+    private async Task ChangeDeviceName()
+    {
+        status = "";
+
+        device.Name = newDeviceName;
+
+        try
+        {
+            device = await Devices.Update(device); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            loading = true;
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+            try {
+                device = this.user.Devices.First(x => x.ID == Guid.Parse(DeviceId));
+            }
+            catch {
+                NavManager.NavigateTo("/");
+            }
+            finally
+            {
+                loading = false;
+            }
+        }
+    }
+}

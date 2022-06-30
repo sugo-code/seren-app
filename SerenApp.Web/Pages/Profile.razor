@@ -1,0 +1,107 @@
+@page "/profile"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<section class="mt-3">
+    <h3>Profile</h3>
+</section>
+
+@if(loading)
+{
+    <Spinner/>
+}
+else
+{
+    <section class="mt-3">
+        <p><span class="oi oi-phone"></span> Phone number: @user?.PhoneNumber</p>
+
+        <p>
+            <span class="oi oi-warning"></span> 
+            @(string.IsNullOrEmpty(user?.SecureContactPhoneNumber) ? "No emergency contact set" : $"Emergency Contact: {user?.SecureContactPhoneNumber}")
+            <button class="btn btn-outline-primary" @onclick="() => editSecureContact = !editSecureContact" ><span class="oi oi-pencil"></span></button>
+        </p>
+
+        @if(editSecureContact)
+        {
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">New emergency contact phone number</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="text" placeholder="Phone" @bind="newPhone"/>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="ChangePhoneNumber" disabled=@string.IsNullOrWhiteSpace(newPhone)>Change</button>
+                </div>
+            </div>
+            
+            
+            
+        }
+    </section>
+}
+
+@if (!string.IsNullOrEmpty(status))
+{
+    <section class="mt-3">
+        <Error>@status</Error>
+    </section>
+}
+
+@code {
+
+    private User user;
+    private string newPhone = "";
+    private string status = "";
+    private bool editSecureContact = false;
+    private bool loading = true;
+
+    private async void ChangePhoneNumber()
+    {
+        status = "";
+        string parsed;
+
+        try
+        {
+            parsed = Logic.AccountLogic.ParsePhoneNumber(newPhone);    
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        user.SecureContactPhoneNumber = parsed;
+
+        try
+        {
+            user = await Users.Update(user); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            return;
+        }
+
+        status = "successfully updated!";
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            loading = true;
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+            loading = false;
+        }
+    }
+}

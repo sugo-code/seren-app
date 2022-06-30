@@ -1,22 +1,33 @@
 @page "/identity/account/register"
 @model RegisterModel
 
-<form method="POST">
+<h3 class="text-center">Register</h3>
 
-    <label for="phone-number">PhoneNumber</label>
-    <input asp-for="Model.PhoneNumber" type="text" id="phone-number" />
+<form method="POST" class="border my-4 p-2">
 
-    <label for="password">Password</label>
-    <input asp-for="Model.Password" type="password" id="password" />
+    <div class="mb-3">
+        <label for="phone-number" class="form-label">Phone Number</label>
+        <input asp-for="Model.PhoneNumber" type="text" id="phone-number" class="form-control"/>
+    </div>
 
-    <label for="confirm-password">Password</label>
-    <input asp-for="Model.ConfirmPassword" type="password" id="confirm-password" />
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input asp-for="Model.Password" type="password" id="password" class="form-control"/>
+    </div>
 
-    <button type="submit">Submit</button>
+    <div class="mb-3">
+        <label for="confirm-password" class="form-label">Confirm Password</label>
+        <input asp-for="Model.ConfirmPassword" type="password" id="confirm-password" class="form-control"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<p>@Model.ErrorMessage</p>
+@if(!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
 
 @if(Model.RegistrationSuccessful) {
-    <p>Succesful registration!</p>
+    <div class="alert alert-success">Succesful registration!</div>
 }

@@ -1,0 +1,126 @@
+@page "/devices"
+@attribute [Authorize(Roles = @Logic.AccountLogic.UserRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+
+@inject IDeviceRepository _devices
+@inject IUserRepository Users
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<section class="mt-3">
+    <h3>Devices</h3>
+</section>
+
+@if (loading)
+{
+    <Spinner/>
+}
+else
+{
+    <section class="mt-3">
+        <h4>Your Devices</h4>
+        @if (user?.Devices is null)
+        {
+            <p>No devices</p>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach(var device in user.Devices)
+                {
+                <NavLink class="list-group-item list-group-item-action" href=@($"/devices/{device.ID}")>@device.Name</NavLink>
+                }
+            </ul>
+        }
+    </section>
+}
+
+<section class="mt-3">
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Add new Device</label>
+        </div>
+        <div class="col">
+            <input class="form-control" type="text" placeholder="Device Id" @bind="newDeviceId"/>
+        </div>
+        <div class="col">
+            <button class="btn btn-primary" @onclick="AddDevice" disabled=@(loading || string.IsNullOrWhiteSpace(newDeviceId))>Add</button>
+        </div>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(status))
+{
+    <section class="mt-3">
+        <Error>@status</Error>
+    </section>
+}
+
+@code {
+
+    private User user;
+    private string newDeviceId = "";
+    private string status = "";
+    private bool loading = true;
+
+    private async Task AddDevice()
+    {
+        status = "";
+        Guid parsed;
+        Core.Model.Device device;
+        loading = true;
+
+        try
+        {
+            parsed = Guid.Parse(newDeviceId);    
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            loading = false;
+            return;
+        }
+
+        try
+        {
+            device = await _devices.GetById(parsed); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            loading = false;
+            return;
+        }
+
+        if (user.Devices is null) user.Devices = new List<Core.Model.Device>(); 
+
+        user.Devices.Add(device);
+
+        try
+        {
+            user = await Users.Update(user); 
+        }
+        catch(Exception e)
+        {
+            status = e.Message;
+            loading = false;
+            return;
+        }
+
+        loading = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            loading = true;
+            this.user = await Users.GetByPhoneNumber(user.Identity.Name);
+            loading = false;
+        }
+    }
+}

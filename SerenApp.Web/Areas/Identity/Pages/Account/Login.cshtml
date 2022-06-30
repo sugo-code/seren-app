@@ -1,34 +1,45 @@
 @page "/identity/account/login"
 @model LoginModel
 
-<h3>Login</h3>
+<h3 class="text-center">Login</h3>
 
-<button id="admin-button" onclick="toggleLogin()" hidden="@Model.LastLoginWasAdmin">Admin Login</button>
-<button id="user-button"  onclick="toggleLogin()" hidden="@(!Model.LastLoginWasAdmin)">User Login</button>
+<button id="admin-button" onclick="toggleLogin()" hidden="@Model.LastLoginWasAdmin" class="btn btn-outline-primary">Admin Login</button>
+<button id="user-button"  onclick="toggleLogin()" hidden="@(!Model.LastLoginWasAdmin)" class="btn btn-outline-primary">User Login</button>
 
-<form id="user-form" method="POST" asp-page-handler="LoginUser" hidden="@Model.LastLoginWasAdmin">
+<form id="user-form" method="POST" asp-page-handler="LoginUser" hidden="@Model.LastLoginWasAdmin" class="border my-4 p-2">
 
-    <label for="user-phone-number">PhoneNumber</label>
-    <input asp-for="UserModel.PhoneNumber" type="text" id="user-phone-number" />
+    <div class="mb-3">
+        <label for="user-phone-number" class="form-label">Phone Number</label>
+        <input asp-for="UserModel.PhoneNumber" type="text" id="user-phone-number" class="form-control"/>
+    </div>
 
-    <label for="user-password">Password</label>
-    <input asp-for="UserModel.Password" type="password" id="user-password" />
+    <div class="mb-3">
+        <label for="user-password" class="form-label">Password</label>
+        <input asp-for="UserModel.Password" type="password" id="user-password" class="form-control"/>
+    </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<form id="admin-form" method="POST" asp-page-handler="LoginAdmin" hidden="@(!Model.LastLoginWasAdmin)">
+<form id="admin-form" method="POST" asp-page-handler="LoginAdmin" hidden="@(!Model.LastLoginWasAdmin)" class="border my-4 p-2">
 
-    <label for="admin-username">Username</label>
-    <input asp-for="AdminModel.Username" type="text" id="admin-username" />
+    <div class="mb-3">
+        <label for="admin-username" class="form-label">Username</label>
+        <input asp-for="AdminModel.Username" type="text" id="admin-username" class="form-control"/>
+    </div>
 
-    <label for="admin-password">Password</label>
-    <input asp-for="AdminModel.Password" type="password" id="admin-password" />
+    <div class="mb-3">
+        <label for="admin-password" class="form-label">Password</label>
+        <input asp-for="AdminModel.Password" type="password" id="admin-password" class="form-control"/>
+    </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<p>@Model.ErrorMessage</p>
+@if(!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
 
 <script>
     function toggleLogin() {
