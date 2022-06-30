@@ -14,13 +14,15 @@ namespace SerenApp.Core.Utility
         {
             DeviceData deviceData = new DeviceData();
 
+
+            var timestamp = DateTimeOffset.Parse((string)data["timeStamp"]).ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             deviceData.ID = new DeviceDataId
             {
                 DeviceId = Guid.Parse(data["deviceId"].ToString()),
-                Timestamp = DateTime.Parse(data["timeStamp"].ToString())
+                Timestamp = DateTimeOffset.Parse(timestamp)
             };
 
-            deviceData.Battery = double.Parse((string)data["battery"]);
+            deviceData.Battery = double.Parse((string)data["batteryLvl"]);
             deviceData.BodyTemperature = double.Parse((string)data["bodyTemp"]);
             deviceData.BloodPressure = int.Parse((string)data["bloodPrs"]);
             deviceData.BloodOxygen = int.Parse((string)data["bloodOxg"]);

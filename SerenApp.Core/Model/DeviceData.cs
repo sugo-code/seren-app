@@ -9,7 +9,7 @@ namespace SerenApp.Core.Model
     public class DeviceDataId
     {
         public Guid DeviceId { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
     }
 
     public class DeviceData : AEntityBase<DeviceDataId>
