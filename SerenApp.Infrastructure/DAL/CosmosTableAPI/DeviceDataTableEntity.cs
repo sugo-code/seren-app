@@ -28,11 +28,12 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
         public bool Fallen { get; set; }
 
         public static DeviceDataTableEntity FromDeviceData(DeviceData d) {
+            
             return new DeviceDataTableEntity
             {
                 PartitionKey = d.ID.DeviceId.ToString(),
-                RowKey = d.ID.Timestamp.ToString(),
-                Timestamp = d.ID.Timestamp,
+                RowKey = d.ID.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
+                Timestamp = DateTimeOffset.Parse(d.ID.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")),
                 Battery = d.Battery,
                 BloodOxygen = d.BloodOxygen,
                 BloodPressure = d.BloodPressure,
