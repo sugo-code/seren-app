@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment()) options.UseInMemoryDatabase("test");
-    else options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"));
+    else options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"), b => b.MigrationsAssembly("SerenApp.Web"));
 });
 builder.Services.AddScoped<TableDbContext>();
 
@@ -37,12 +37,13 @@ builder.Services.AddScoped<AccountLogic>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+    app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 }
 
 app.UseHttpsRedirection();
