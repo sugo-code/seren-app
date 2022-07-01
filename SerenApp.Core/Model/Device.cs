@@ -10,5 +10,6 @@ namespace SerenApp.Core.Model
     {
         public string FirmwareVersion { get; set; }
         public string Name { get; set; }
+        public virtual User? User{ get; set; }
     }
 }
