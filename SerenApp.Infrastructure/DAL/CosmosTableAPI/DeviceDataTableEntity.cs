@@ -21,6 +21,7 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
         public double Battery { get; set; }
         public double BodyTemperature { get; set; }
         public double BloodPressure { get; set; }
+        public int Serendipity { get; set; }
         public double BloodOxygen { get; set; }
         public int HeartFrequency { get; set; }
         public int WalkCount { get; set; }
@@ -35,6 +36,7 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
                 RowKey = d.ID.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
                 Timestamp = DateTimeOffset.Parse(d.ID.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")),
                 Battery = d.Battery,
+                Serendipity = d.Serendipity,
                 BloodOxygen = d.BloodOxygen,
                 BloodPressure = d.BloodPressure,
                 BodyTemperature = d.BodyTemperature,
@@ -54,6 +56,7 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
                     Timestamp = DateTime.Parse(RowKey)
                 },
                 Battery = Battery,
+                Serendipity = Serendipity,
                 BloodOxygen = BloodOxygen,
                 BloodPressure = BloodPressure,
                 BodyTemperature = BodyTemperature,

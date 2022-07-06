@@ -30,6 +30,7 @@ namespace SerenApp.Core.Utility
             deviceData.WalkCount = int.Parse((string)data["walkCount"]);
             deviceData.Sleeping = bool.Parse((string)data["isSleeping"]);
             deviceData.Fallen = bool.Parse((string)data["isFallen"]);
+            deviceData.Serendipity = int.Parse((string)data["serendipityLvl"]);
 
             return deviceData;
         }
