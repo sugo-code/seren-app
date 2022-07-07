@@ -102,7 +102,7 @@ namespace SugoCode.EventHubs
             }
 
             // Uploading data to Cosmos Table
-            if (deviceDataTelemetries.Count() == 10)
+            if (deviceDataTelemetries.Any())
             {
                 try
                 {
@@ -126,18 +126,18 @@ namespace SugoCode.EventHubs
 
         private async Task CheckDataThenSendToQueue(ILogger log, DeviceData device)
         {
-            if(device.Battery > 20)
+            if(device.Battery < 20)
             {
                 var result = await _queueService.SendMessageToQueueAsync($"{device.ID.DeviceId} Battery");
 
-                if (result) log.LogInformation("Message succefully send it to the queue");
+                if (result) log.LogInformation("Battery Message succefully send it to the queue");
                 else log.LogError("Something wrong in sending message to the queue");
             }
             if (device.Fallen)
             {
                 var result = await _queueService.SendMessageToQueueAsync($"{device.ID.DeviceId} Fallen");
 
-                if (result) log.LogInformation("Message succefully send it to the queue");
+                if (result) log.LogInformation("Battery Message succefully send it to the queue");
                 else log.LogError("Something wrong in sending message to the queue");
             }
 
