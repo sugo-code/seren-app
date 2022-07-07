@@ -19,10 +19,12 @@ namespace SugoCode.EventHubs
     public class EventHubReceiver
     {
         private readonly IDeviceDataRepository _repository;
+        private readonly IQueueService _queueService;
 
-        public EventHubReceiver(IDeviceDataRepository repository)
+        public EventHubReceiver(IDeviceDataRepository repository, IQueueService queueService)
         {
             _repository = repository;
+            _queueService = queueService;
         }
 
         [FunctionName("EventHubReceiver")]
@@ -62,6 +64,7 @@ namespace SugoCode.EventHubs
                             DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                             log.LogInformation($"Mapped To: \n{deviceData}");
                             deviceDataTelemetries.Add(deviceData);
+                            await CheckDataThenSendToQueue(log, deviceData);
                         }
                         catch (Exception e)
                         {
@@ -83,6 +86,7 @@ namespace SugoCode.EventHubs
                                 var dataBodyObject = JObject.Parse(parsedObject["data"]["body"].ToString());
                                 DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                                 deviceDataTelemetries.Add(deviceData);
+                                await CheckDataThenSendToQueue(log, deviceData);
                             }
                         }
                     }
@@ -117,6 +121,27 @@ namespace SugoCode.EventHubs
 
             if (exceptions.Count == 1)
                 throw exceptions.Single();
+        }
+
+
+        private async Task CheckDataThenSendToQueue(ILogger log, DeviceData device)
+        {
+            if(device.Battery > 20)
+            {
+                var result = await _queueService.SendMessageToQueueAsync($"{device.ID.DeviceId} Battery");
+
+                if (result) log.LogInformation("Message succefully send it to the queue");
+                else log.LogError("Something wrong in sending message to the queue");
+            }
+            if (device.Fallen)
+            {
+                var result = await _queueService.SendMessageToQueueAsync($"{device.ID.DeviceId} Fallen");
+
+                if (result) log.LogInformation("Message succefully send it to the queue");
+                else log.LogError("Something wrong in sending message to the queue");
+            }
+
+            await Task <bool>.Yield();
         }
     }
 }

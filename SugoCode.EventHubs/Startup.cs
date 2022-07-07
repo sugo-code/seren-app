@@ -2,7 +2,9 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SerenApp.Core.Interfaces;
+using SerenApp.Infrastructure;
 using SerenApp.Infrastructure.DAL;
 using SerenApp.Infrastructure.DAL.CosmosTableAPI;
 using System;
@@ -26,7 +28,8 @@ namespace SugoCode.EventHubs
             //{
             //    var tableName = Environment.GetEnvironmentVariable("CosmosTableName");
             //    options.UseCosmos(Environment.GetEnvironmentVariable("CosmosTableConn"), tableName);
-            //});
+            //});      
+            
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
@@ -39,6 +42,7 @@ namespace SugoCode.EventHubs
                 return new TableDbContext(connectionString, tableName);
             });
             builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
+            builder.Services.AddScoped<IQueueService, QueueService>();
             
         }
     }

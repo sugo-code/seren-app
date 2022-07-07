@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Shared\NavMenu.razor.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="libphonenumber-csharp" Version="8.12.50" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.6" />
@@ -26,6 +30,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SerenApp.Infrastructure\SerenApp.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
