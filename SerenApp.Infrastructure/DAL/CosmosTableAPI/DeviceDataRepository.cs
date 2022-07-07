@@ -38,7 +38,7 @@ namespace SerenApp.Infrastructure.DAL.CosmosTableAPI
 
         public async Task<IEnumerable<DeviceData>> GetManyByDevice(Device d)
         {
-            var data = DeviceDataTableEntity.FromDeviceData(new DeviceData { ID = new DeviceDataId { DeviceId = d.ID } });
+            var data = DeviceDataTableEntity.FromDeviceData(new DeviceData { ID = new DeviceDataId { DeviceId = d.ID, Timestamp = DateTimeOffset.UtcNow } });
             var list = await context.QueryAsync(x => x.PartitionKey == data.PartitionKey);
             return list.Select(x => x.ToDeviceData());
         }
