@@ -12,9 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseLazyLoadingProxies();
-    //if (builder.Environment.IsDevelopment()) options.UseSqlServer(builder.Configuration.GetConnectionString("LocalSql"), b => b.MigrationsAssembly("SerenApp.Web"));
-    //else
-        options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"), b => b.MigrationsAssembly("SerenApp.Web"));
+    if (builder.Environment.IsDevelopment()) options.UseSqlServer(builder.Configuration.GetConnectionString("LocalSql"), b => b.MigrationsAssembly("SerenApp.Web"));
+    else options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"), b => b.MigrationsAssembly("SerenApp.Web"));
 });
 
 builder.Services.AddScoped<TableDbContext>(x => {
