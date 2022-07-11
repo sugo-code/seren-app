@@ -26,6 +26,7 @@ builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<IDeviceDataRepository, DeviceDataRepository>();
+builder.Services.AddScoped<IDeviceReportRepository, DeviceReportRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
