@@ -1,0 +1,98 @@
+@page "/device-reports"
+@attribute [Authorize(Roles = @Logic.AccountLogic.AdminRole)]
+
+@using SerenApp.Core.Interfaces
+@using SerenApp.Core.Model
+@using System.Linq;
+
+@inject IDeviceReportRepository Reports
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+
+<section class="mt-3">
+    <h3>Device Reports</h3>
+
+    <div class="row">
+        <div class="col-md">
+            <h5>Heart</h5>
+            <div class="chart-container">
+                <canvas @ref="HeartChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md">
+            <h5>Body</h5>
+            <div class="chart-container">
+                <canvas @ref="BodyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+
+    private IJSObjectReference module;
+    private ElementReference HeartChart;
+    private ElementReference BodyChart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        module = await JSRuntime.InvokeAsync<IJSObjectReference>("import","./Pages/DeviceReports.razor.js");
+
+        try {
+            await RenderCharts();
+        }
+        catch
+        {
+            
+        }
+    }
+
+    private async Task RenderCharts()
+    {
+        var data = await Reports.GetAll();
+
+        var bloodOxygen = new
+        {
+            label = "Blood Oxygen Percentage",
+            data = data.Select(x => x.BloodOxygenAvg),
+            borderColor = "dodgerBlue",
+            backgroundColor = "dodgerBlue",
+            yAxisID = "yBloodOxygen"
+        };
+        var bloodPressure = new
+        {
+            label = "Blood Pressure",
+            data = data.Select(x => x.BloodPressureAvg),
+            borderColor = "steelBlue",
+            backgroundColor = "steelBlue",
+            yAxisID = "yBloodPressure"
+        };
+        var bodyTemperature = new
+        {
+            label = "Body Temperature",
+            data = data.Select(x => x.BodyTemperatureAvg),
+            borderColor = "paleVioletRed",
+            backgroundColor = "paleVioletRed",
+            yAxisID = "yBodyTemperature"
+        };
+        var heartFrequency = new
+        {
+            label = "Heart Frequency",
+            data = data.Select(x => x.HeartFrequencyAvg),
+            borderColor = "tomato",
+            backgroundColor = "tomato",
+            yAxisID = "yHeartFrequency"
+        };
+
+        await module.InvokeVoidAsync("RenderHeartChart", HeartChart, new
+        {
+            labels = data.Select(x => x.ID),
+            datasets = new List<object>(){heartFrequency, bloodPressure}
+        });
+        await module.InvokeVoidAsync("RenderBodyChart", BodyChart, new
+        {
+            labels = data.Select(x => x.ID),
+            datasets = new List<object>(){bodyTemperature, bloodOxygen}
+        });
+    }
+}
