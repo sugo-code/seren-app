@@ -137,7 +137,7 @@ namespace SugoCode.EventHubs
             {
                 var result = await _queueService.SendMessageToQueueAsync($"{device.ID.DeviceId} Fallen");
 
-                if (result) log.LogInformation("Battery Message succefully send it to the queue");
+                if (result) log.LogInformation("Fallen Message succefully send it to the queue");
                 else log.LogError("Something wrong in sending message to the queue");
             }
 
