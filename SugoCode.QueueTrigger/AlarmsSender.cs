@@ -59,7 +59,9 @@ namespace SugoCode.QueueTrigger
                     {
                         To = user.PhoneNumber,
                         From = "Seren App Admin Alert",
-                        Text = $"The device's battery of {device.Name} is below 20%"
+                        Text = $"The device's battery of {device.Name} is below 20%",
+                        Type = Vonage.Messaging.SmsType.unicode
+
                     });
                 }
                 catch (Exception ex)
@@ -77,13 +79,15 @@ namespace SugoCode.QueueTrigger
                     {
                         To = user.PhoneNumber,
                         From = "Seren App Admin Alert",
-                        Text = $"The person with device {device.Name} is fallen"
+                        Text = $"The person with device {device.Name} is fallen",
+                        Type = Vonage.Messaging.SmsType.unicode
                     });
                     var response2 = vonageClient.SmsClient.SendAnSms(new Vonage.Messaging.SendSmsRequest()
                     {
                         To = user.SecureContactPhoneNumber,
                         From = "Seren App Admin Alert",
-                        Text = $"The person with device {device.Name} is fallen"
+                        Text = $"The person with device {device.Name} is fallen",
+                        Type = Vonage.Messaging.SmsType.unicode
                     });
 
                 }
