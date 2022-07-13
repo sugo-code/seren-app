@@ -58,7 +58,7 @@ namespace SugoCode.EventHubs
                             //DeviceDataTable deviceDataTab = JsonConvert.DeserializeObject<DeviceDataTable>(messageBody);
                             //log.LogInformation($"Deserialize:\nType: {deviceDataTab}\n");
 
-                            log.LogInformation("Parsing Data to JObject... ");
+                            log.LogInformation("Parsing Data... ");
                             using var dataBodyObject = JsonDocument.Parse(messageBody);
                             DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                             log.LogInformation($"Mapped To: \n{deviceData}");
