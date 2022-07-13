@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SerenApp.Infrastructure.DAL.EntityFrameworkCore;
 
@@ -11,9 +12,10 @@ using SerenApp.Infrastructure.DAL.EntityFrameworkCore;
 namespace SerenApp.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220701103855_AddedUserPropNullableToDevice")]
+    partial class AddedUserPropNullableToDevice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,31 +65,6 @@ namespace SerenApp.Web.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Devices");
-                });
-
-            modelBuilder.Entity("SerenApp.Core.Model.DeviceReport", b =>
-                {
-                    b.Property<DateTimeOffset>("ID")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("BatteryAvg")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BloodOxygenAvg")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BloodPressureAvg")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BodyTemperatureAvg")
-                        .HasColumnType("float");
-
-                    b.Property<int>("HeartFrequencyAvg")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DeviceReports");
                 });
 
             modelBuilder.Entity("SerenApp.Core.Model.User", b =>

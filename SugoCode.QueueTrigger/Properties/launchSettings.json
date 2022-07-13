@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SugoCode.QueueTrigger": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7294"
+    }
+  }
+}

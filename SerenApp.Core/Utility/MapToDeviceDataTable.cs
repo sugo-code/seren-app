@@ -28,7 +28,8 @@ namespace SerenApp.Core.Utility
                 HeartFrequency = obj.GetProperty("heartFrq").GetInt32(),
                 WalkCount = obj.GetProperty("walkCount").GetInt32(),
                 Sleeping = obj.GetProperty("isSleeping").GetBoolean(),
-                Fallen = obj.GetProperty("isFallen").GetBoolean()
+                Fallen = obj.GetProperty("isFallen").GetBoolean(),
+                Serendipity = int.Parse((string)data["serendipityLvl"]);
             };
         }
     }

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "SugoCode.CosmosDBTrigger": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7249",
+      "environmentVariables": {
+        "COMMUNICATION_SERVICES_CONNECTION_STRING": "endpoint=https:/sugocode-communication-service.communication.azure.com/;accesskey=B4spR/dQzjRhxOb0qFgBbu5SiXI5COtdvvP/gE3TiALjrJ42n+bbG8aN+rCkeIwsGTtU+xOQoeixbnc7iZYjBw=="
+      }
+    }
+  }
+}

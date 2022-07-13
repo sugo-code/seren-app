@@ -18,6 +18,7 @@ namespace SerenApp.Core.Model
         public double BloodPressure { get; set; }
         public double BloodOxygen { get; set; }
         public double Battery { get; set; }
+        public int Serendipity { get; set; }
         public int HeartFrequency { get; set; }
         public int WalkCount { get; set; }
         public bool Sleeping { get; set; }
