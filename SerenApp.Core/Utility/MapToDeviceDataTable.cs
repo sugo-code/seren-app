@@ -21,7 +21,7 @@ namespace SerenApp.Core.Utility
                     DeviceId = obj.GetProperty("deviceId").GetGuid(),
                     Timestamp = obj.GetProperty("timeStamp").GetDateTime()
                 },
-                Battery = obj.GetProperty("battery").GetDouble(),
+                Battery = obj.GetProperty("batteryLvl").GetDouble(),
                 BodyTemperature = obj.GetProperty("bodyTemp").GetDouble(),
                 BloodPressure = obj.GetProperty("bloodPrs").GetInt32(),
                 BloodOxygen = obj.GetProperty("bloodOxg").GetInt32(),
@@ -29,7 +29,7 @@ namespace SerenApp.Core.Utility
                 WalkCount = obj.GetProperty("walkCount").GetInt32(),
                 Sleeping = obj.GetProperty("isSleeping").GetBoolean(),
                 Fallen = obj.GetProperty("isFallen").GetBoolean(),
-                Serendipity = int.Parse((string)data["serendipityLvl"]);
+                Serendipity = obj.GetProperty("serendipityLvl").GetInt32()
             };
         }
     }
