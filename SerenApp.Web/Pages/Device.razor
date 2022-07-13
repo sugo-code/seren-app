@@ -65,6 +65,8 @@ else
                     <canvas @ref="BodyChart"></canvas>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md">
                 <h5>Battery</h5>
                 <div class="chart-container">
@@ -127,6 +129,8 @@ else
             this.user = await Users.GetByPhoneNumber(user.Identity.Name);
             try {
                 device = this.user.Devices.First(x => x.ID == Guid.Parse(DeviceId));
+                module = await JSRuntime.InvokeAsync<IJSObjectReference>("import","./Pages/Device.razor.js");
+                RenderCharts();
             }
             catch {
                 NavManager.NavigateTo("/");
@@ -134,18 +138,16 @@ else
             finally
             {
                 loading = false;
-            }   
+            }
         }
     }
 
     private async Task RenderCharts()
     {
-        var data = await Data.GetManyByDevice(device);
-
         var battery = new
         {
             label = "Battery Percentage",
-            data = data.Select(x => x.Battery),
+            data = new List<double>(),
             borderColor = "limeGreen",
             backgroundColor = "limeGreen",
             yAxisID = "yBattery"
@@ -153,7 +155,7 @@ else
         var bloodOxygen = new
         {
             label = "Blood Oxygen Percentage",
-            data = data.Select(x => x.BloodOxygen),
+            data = new List<double>(),
             borderColor = "dodgerBlue",
             backgroundColor = "dodgerBlue",
             yAxisID = "yBloodOxygen"
@@ -161,7 +163,7 @@ else
         var bloodPressure = new
         {
             label = "Blood Pressure",
-            data = data.Select(x => x.BloodPressure),
+            data = new List<double>(),
             borderColor = "steelBlue",
             backgroundColor = "steelBlue",
             yAxisID = "yBloodPressure"
@@ -169,7 +171,7 @@ else
         var bodyTemperature = new
         {
             label = "Body Temperature",
-            data = data.Select(x => x.BodyTemperature),
+            data = new List<double>(),
             borderColor = "paleVioletRed",
             backgroundColor = "paleVioletRed",
             yAxisID = "yBodyTemperature"
@@ -177,7 +179,7 @@ else
         var heartFrequency = new
         {
             label = "Heart Frequency",
-            data = data.Select(x => x.HeartFrequency),
+            data = new List<int>(),
             borderColor = "tomato",
             backgroundColor = "tomato",
             yAxisID = "yHeartFrequency"
@@ -185,42 +187,49 @@ else
         var serendipity = new
         {
             label = "Serendipity",
-            data = data.Select(x => x.Serendipity),
+            data = new List<int>(),
             borderColor = "darkMagenta",
             backgroundColor = "darkMagenta",
             yAxisID = "ySerendipity"
         };
 
-        await module.InvokeVoidAsync("RenderHeartChart", HeartChart, new
-        {
-            labels = data.Select(x => x.ID.Timestamp),
-            datasets = new List<object>(){heartFrequency, bloodPressure}
-        });
-        await module.InvokeVoidAsync("RenderBodyChart", BodyChart, new
-        {
-            labels = data.Select(x => x.ID.Timestamp),
-            datasets = new[]{bloodOxygen, bodyTemperature}
-        });
-        await module.InvokeVoidAsync("RenderBatteryChart", BatteryChart, new
-        {
-            labels = data.Select(x => x.ID.Timestamp),
-            datasets = new[]{battery}
-        });
-        await module.InvokeVoidAsync("RenderSerendipityChart", SerendipityChart, new
-        {
-            labels = data.Select(x => x.ID.Timestamp),
-            datasets = new[]{serendipity}
-        });
-    }
+        var data = (await Data.GetManyByDevice(device)).Where(x => x.ID.Timestamp > DateTime.Now.AddDays(-1));
+        var labels = data.Select(x => x.ID.Timestamp);
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        module = await JSRuntime.InvokeAsync<IJSObjectReference>("import","./Pages/Device.razor.js");
-        if (device is not null) {
-            try {
-                await RenderCharts();
-            }
-            catch { }
+        foreach(var item in data)
+        {
+            battery.data.Add(item.Battery);
+            bloodOxygen.data.Add(item.BloodOxygen);
+            bloodPressure.data.Add(item.BloodPressure);
+            bodyTemperature.data.Add(item.BodyTemperature);
+            heartFrequency.data.Add(item.HeartFrequency);
+            serendipity.data.Add(item.Serendipity);
         }
+
+        var tasks = new[]
+        {
+            module.InvokeVoidAsync("RenderHeartChart", HeartChart, new
+            {
+                labels = data.Select(x => x.ID.Timestamp),
+                datasets = new List<object>(){heartFrequency, bloodPressure}
+            }),
+            module.InvokeVoidAsync("RenderBodyChart", BodyChart, new
+            {
+                labels = data.Select(x => x.ID.Timestamp),
+                datasets = new[]{bloodOxygen, bodyTemperature}
+            }),
+            module.InvokeVoidAsync("RenderBatteryChart", BatteryChart, new
+            {
+                labels = data.Select(x => x.ID.Timestamp),
+                datasets = new[]{battery}
+            }),
+            module.InvokeVoidAsync("RenderSerendipityChart", SerendipityChart, new
+            {
+                labels = data.Select(x => x.ID.Timestamp),
+                datasets = new[]{serendipity}
+            })
+        };
+
+        await Task.WhenAll(tasks.Select(x => x.AsTask()));
     }
 }
