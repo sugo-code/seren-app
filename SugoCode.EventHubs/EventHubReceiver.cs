@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Data.Tables;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SerenApp.Core.Interfaces;
 using SerenApp.Core.Model;
 using SerenApp.Core.Utility;
@@ -60,7 +59,7 @@ namespace SugoCode.EventHubs
                             //log.LogInformation($"Deserialize:\nType: {deviceDataTab}\n");
 
                             log.LogInformation("Parsing Data to JObject... ");
-                            var dataBodyObject = JObject.Parse(messageBody);
+                            using var dataBodyObject = JsonDocument.Parse(messageBody);
                             DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
                             log.LogInformation($"Mapped To: \n{deviceData}");
                             deviceDataTelemetries.Add(deviceData);
@@ -74,20 +73,20 @@ namespace SugoCode.EventHubs
                     else if(messageBody.StartsWith("["))
                     {
                         log.LogInformation("Parsing Data to JArray... ");
-                        JArray parsedArr = JArray.Parse(messageBody);
+                        using var parsedArr = JsonDocument.Parse(messageBody);
 
-                        foreach (JObject parsedObject in parsedArr.Children<JObject>())
+                        foreach (JsonElement parsedObject in parsedArr.RootElement.EnumerateArray())
                         {
-                            if (parsedObject["data"]["body"] is not null)
+                            try
                             {
+                                using var data = JsonDocument.Parse(parsedObject.GetProperty("data").GetProperty("body").ToString());
                                 log.LogInformation("Deserialize to DeviceData");
-                                log.LogInformation(parsedObject["data"]["body"].ToString());
-
-                                var dataBodyObject = JObject.Parse(parsedObject["data"]["body"].ToString());
-                                DeviceData deviceData = MapToDeviceDataTable.Map(dataBodyObject);
+                                log.LogInformation(data.ToString());
+                                var deviceData = MapToDeviceDataTable.Map(data);
                                 deviceDataTelemetries.Add(deviceData);
                                 await CheckDataThenSendToQueue(log, deviceData);
                             }
+                            catch { }
                         }
                     }
 

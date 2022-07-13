@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SerenApp.Infrastructure.DAL.EntityFrameworkCore;
 
@@ -11,9 +12,10 @@ using SerenApp.Infrastructure.DAL.EntityFrameworkCore;
 namespace SerenApp.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220707072237_AddedDeviceReports")]
+    partial class AddedDeviceReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,11 +117,9 @@ namespace SerenApp.Web.Migrations
 
             modelBuilder.Entity("SerenApp.Core.Model.Device", b =>
                 {
-                    b.HasOne("SerenApp.Core.Model.User", "User")
+                    b.HasOne("SerenApp.Core.Model.User", null)
                         .WithMany("Devices")
                         .HasForeignKey("UserID");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SerenApp.Core.Model.User", b =>
