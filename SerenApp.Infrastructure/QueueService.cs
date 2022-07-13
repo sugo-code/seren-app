@@ -22,7 +22,7 @@ namespace SerenApp.Infrastructure
         public QueueService(IConfiguration config, ILogger<QueueService> logger)
         {
             _config = config;
-            conn = _config.GetConnectionString("ServiceBusQueue");
+            conn = _config.GetConnectionString("ServiceBusQueueConn");
             client = new ServiceBusClient(conn);
             sender = client.CreateSender(queueName);
             this.logger = logger;

@@ -17,6 +17,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
+    <PackageReference Include="Vonage" Version="5.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SerenApp.Infrastructure\SerenApp.Infrastructure.csproj" />
