@@ -71,6 +71,12 @@ else
                     <canvas @ref="BatteryChart"></canvas>
                 </div>
             </div>
+            <div class="col-md">
+                <h5>Serendipity</h5>
+                <div class="chart-container">
+                    <canvas @ref="SerendipityChart"></canvas>
+                </div>
+            </div>
         </div>
     </section>
 }
@@ -91,6 +97,7 @@ else
     private ElementReference HeartChart;
     private ElementReference BodyChart;
     private ElementReference BatteryChart;
+    private ElementReference SerendipityChart;
 
     private async Task ChangeDeviceName()
     {
@@ -175,6 +182,14 @@ else
             backgroundColor = "tomato",
             yAxisID = "yHeartFrequency"
         };
+        var serendipity = new
+        {
+            label = "Serendipity",
+            data = data.Select(x => x.Serendipity),
+            borderColor = "darkMagenta",
+            backgroundColor = "darkMagenta",
+            yAxisID = "ySerendipity"
+        };
 
         await module.InvokeVoidAsync("RenderHeartChart", HeartChart, new
         {
@@ -190,6 +205,11 @@ else
         {
             labels = data.Select(x => x.ID.Timestamp),
             datasets = new[]{battery}
+        });
+        await module.InvokeVoidAsync("RenderSerendipityChart", SerendipityChart, new
+        {
+            labels = data.Select(x => x.ID.Timestamp),
+            datasets = new[]{serendipity}
         });
     }
 

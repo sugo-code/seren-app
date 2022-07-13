@@ -78,7 +78,6 @@ export function RenderBodyChart(chart, data) {
     new Chart(chart, opts);
 }
 
-
 export function RenderBatteryChart(chart, data) {
     const opts = {
         ...defaultChartOpts,
@@ -88,6 +87,26 @@ export function RenderBatteryChart(chart, data) {
             scales: {
                 ...defaultChartOpts.options.scales,
                 yBattery: {
+                    type: 'linear',
+                    position: 'left',
+                    min: 0,
+                    max: 100
+                }
+            }
+        }
+    }
+    new Chart(chart, opts);
+}
+
+export function RenderSerendipityChart(chart, data) {
+    const opts = {
+        ...defaultChartOpts,
+        data,
+        options: {
+            ...defaultChartOpts.options,
+            scales: {
+                ...defaultChartOpts.options.scales,
+                ySerendipity: {
                     type: 'linear',
                     position: 'left',
                     min: 0,
