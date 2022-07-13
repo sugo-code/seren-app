@@ -18,8 +18,8 @@ namespace SerenApp.Core.Utility
             {
                 ID = new DeviceDataId
                 {
-                    DeviceId = obj.GetProperty("deviceId").GetGuid(),
-                    Timestamp = obj.GetProperty("timeStamp").GetDateTime()
+                    DeviceId = Guid.Parse(obj.GetProperty("deviceId").GetString()),
+                    Timestamp = DateTimeOffset.Parse(obj.GetProperty("timeStamp").GetString())
                 },
                 Battery = obj.GetProperty("batteryLvl").GetDouble(),
                 BodyTemperature = obj.GetProperty("bodyTemp").GetDouble(),
@@ -27,8 +27,8 @@ namespace SerenApp.Core.Utility
                 BloodOxygen = obj.GetProperty("bloodOxg").GetInt32(),
                 HeartFrequency = obj.GetProperty("heartFrq").GetInt32(),
                 WalkCount = obj.GetProperty("walkCount").GetInt32(),
-                Sleeping = obj.GetProperty("isSleeping").GetBoolean(),
-                Fallen = obj.GetProperty("isFallen").GetBoolean(),
+                Sleeping = Boolean.Parse(obj.GetProperty("isSleeping").GetString()),
+                Fallen = Boolean.Parse(obj.GetProperty("isFallen").GetString()),
                 Serendipity = obj.GetProperty("serendipityLvl").GetInt32()
             };
         }
